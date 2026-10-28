@@ -6,7 +6,7 @@ The public marketing, support and privacy website for DesktopPet, a macOS 14+ pi
 - Website: https://glzlaohuai.github.io/desktoppet-site/
 - Support: https://glzlaohuai.github.io/desktoppet-site/support/
 - Privacy: https://glzlaohuai.github.io/desktoppet-site/privacy/
-- Intended custom domain: `desktoppet.hiimobapps.cn`, pending access to existing AliDNS and server configuration.
+- Intended custom domain: `desktoppet.hiimobapps.cn`, pending its AliDNS A record. The existing Nginx server is staged and its HTTP virtual host is verified. The custom-domain certificate has not been issued.
 
 ## Build and preview
 
@@ -32,3 +32,11 @@ For production, use the actual HTTPS `SITE_URL`. The builder handles a project s
 No app code, personal review contact information, API keys, signing material, certificate private keys or server credentials are included. Public support uses this repository's GitHub Issues. This repository does not license the DesktopPet application or original companion artwork for redistribution.
 
 See [deploy/README.md](deploy/README.md) for dedicated Nginx and certbot deployment using an existing server. GitHub Pages uses GitHub-managed HTTPS and cannot install a certbot certificate.
+
+## Deployment status (October 28, 2026)
+
+GitHub Pages is live with enforced, validated HTTPS. All 18 public localized pages returned HTTP 200. Browser checks passed at 1440, 768, 390 and 320 pixels; pet selection, greetings, pause, Reduce Motion, language-preserving navigation, FAQ expansion and privacy access without JavaScript were verified.
+
+The existing server at `101.200.38.45` has a dedicated `/etc/nginx/conf.d/desktoppet.hiimobapps.cn.conf`, release directories under `/var/www/desktoppet/releases/`, and a `current` symlink. All 18 routes and the ACME webroot were verified through the target Host header, including from outside the server. The original Nginx configuration files were checked by SHA-256 and remain unchanged. Its existing `certbot-renew.timer` is active.
+
+Remaining: add only `desktoppet` A → `101.200.38.45` in AliDNS. No local or server default AliDNS credentials, or ECS RAM role, were available. Then use `deploy/finish-tls.sh` on that server to issue the certificate via the existing certbot account, install the dedicated HTTPS virtual host, check renewal and verify public HTTPS. No paid resource was created. The apex domain and all other DNS records were left untouched.

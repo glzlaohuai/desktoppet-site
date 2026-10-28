@@ -2,6 +2,8 @@
 
 Use an existing Nginx server with authorization, a working SSH login, and ports 80/443 reachable. This repository never provisions paid resources. Do not alter the apex domain or other virtual hosts.
 
+The current existing-server deployment has completed steps 2–4 and verified the webroot publicly using a Host header. DNS is the remaining prerequisite. The final TLS configuration and `finish-tls.sh` are prepared under `/var/www/desktoppet/deploy/`; run that script after adding the A record. It uses the existing ACME account, checks DNS, preserves the previous dedicated configuration, and tests only the new certificate’s renewal. The certificate has not yet been issued.
+
 1. Add only the `desktoppet` A record in the existing `hiimobapps.cn` AliDNS zone, pointing to the chosen server's public IPv4 address. Add AAAA only if that server actually supports public IPv6. Check CAA and any existing record before changing this subdomain.
 2. Build with `SITE_URL=https://desktoppet.hiimobapps.cn python3 scripts/build.py`, then run `SITE_URL=https://desktoppet.hiimobapps.cn python3 scripts/check.py`.
 3. Copy `_site/` into a new timestamped directory under `/var/www/desktoppet/releases/`. Set `/var/www/desktoppet/current` as a symlink to this release. Preserve the previous release for rollback. Give Nginx read access only.
