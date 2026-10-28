@@ -17,7 +17,8 @@ PY
 nginx -t
 certbot certonly --webroot -w /var/www/certbot \
   --cert-name "$desktoppet_domain" -d "$desktoppet_domain" \
-  --non-interactive --agree-tos
+  --non-interactive --agree-tos \
+  --deploy-hook 'nginx -t && systemctl reload nginx'
 desktoppet_backup="/var/www/desktoppet/nginx-before-tls-$(date -u +%Y%m%dT%H%M%SZ).conf"
 cp "$desktoppet_conf" "$desktoppet_backup"
 cp "$desktoppet_script_dir/desktoppet.tls.nginx.conf" "$desktoppet_conf"
