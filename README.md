@@ -3,10 +3,10 @@
 The public marketing, support and privacy website for DesktopPet, a macOS 14+ pixel companion app. Six complete static languages: English, Simplified Chinese, Japanese, Korean, French and German. DesktopPet is preparing for its first App Store release; no download or unverified pricing is advertised.
 
 - Repository: https://github.com/glzlaohuai/desktoppet-site
-- Website: https://glzlaohuai.github.io/desktoppet-site/
-- Support: https://glzlaohuai.github.io/desktoppet-site/support/
-- Privacy: https://glzlaohuai.github.io/desktoppet-site/privacy/
-- Intended custom domain: `desktoppet.hiimobapps.cn`, pending its AliDNS A record. The existing Nginx server is staged and its HTTP virtual host is verified. The custom-domain certificate has not been issued.
+- Website: https://desktoppet.hiimobapps.cn/
+- Support: https://desktoppet.hiimobapps.cn/support/
+- Privacy: https://desktoppet.hiimobapps.cn/privacy/
+- GitHub Pages backup: https://glzlaohuai.github.io/desktoppet-site/
 
 ## Build and preview
 
@@ -18,7 +18,7 @@ SITE_URL=http://127.0.0.1:8765 python3 scripts/check.py
 python3 -m http.server 8765 --directory _site --bind 127.0.0.1
 ```
 
-For production, use the actual HTTPS `SITE_URL`. The builder handles a project subpath as well as a domain root. Every push to `main` builds, checks internal links and deploys GitHub Pages. Set the repository variable `SITE_URL` to change its canonical origin; this alone does not configure DNS or Pages custom domains.
+For the primary server, build with `SITE_URL=https://desktoppet.hiimobapps.cn`. The builder handles a project subpath as well as a domain root. Every push to `main` builds, checks internal links and deploys the GitHub Pages backup. Keep that workflow's URL at its default project subpath; publish the primary server separately using the release procedure in `deploy/README.md`.
 
 ## Sources
 
@@ -35,8 +35,8 @@ See [deploy/README.md](deploy/README.md) for dedicated Nginx and certbot deploym
 
 ## Deployment status (October 28, 2026)
 
-GitHub Pages is live with enforced, validated HTTPS. All 18 public localized pages returned HTTP 200. Browser checks passed at 1440, 768, 390 and 320 pixels; pet selection, greetings, pause, Reduce Motion, language-preserving navigation, FAQ expansion and privacy access without JavaScript were verified.
+The primary website is live on the custom domain with HTTP-to-HTTPS redirects and a certbot-issued Let's Encrypt certificate, valid through January 26, 2027. Certificate hostname and trust were verified. The existing `certbot-renew.timer` is active, the certificate has a successful renewal dry run, and its deploy hook reloads Nginx after renewal. GitHub Pages remains a separate HTTPS backup.
 
-The existing server at `101.200.38.45` has a dedicated `/etc/nginx/conf.d/desktoppet.hiimobapps.cn.conf`, release directories under `/var/www/desktoppet/releases/`, and a `current` symlink. All 18 routes and the ACME webroot were verified through the target Host header, including from outside the server. The original Nginx configuration files were checked by SHA-256 and remain unchanged. Its existing `certbot-renew.timer` is active.
+The existing server at `101.200.38.45` has a dedicated `/etc/nginx/conf.d/desktoppet.hiimobapps.cn.conf`, release directories under `/var/www/desktoppet/releases/`, and a `current` symlink. All 18 routes and the ACME webroot were verified, including from outside the server. Browser checks passed at 1440, 768, 390 and 320 pixels; pet selection, greetings, pause, Reduce Motion, language-preserving navigation, FAQ expansion and privacy access without JavaScript were verified.
 
-Remaining: add only `desktoppet` A → `101.200.38.45` in AliDNS. No local or server default AliDNS credentials, or ECS RAM role, were available. Then use `deploy/finish-tls.sh` on that server to issue the certificate via the existing certbot account, install the dedicated HTTPS virtual host, check renewal and verify public HTTPS. No paid resource was created. The apex domain and all other DNS records were left untouched.
+AliDNS was configured using the existing local CLI OAuth profile: only `desktoppet` A → `101.200.38.45` was added (TTL 600). Google DNS, Cloudflare DNS and the server resolver confirmed it. All nine pre-existing DNS records and all six pre-existing Nginx configuration files were checked and remain unchanged. No paid resource was created. Keys and CLI credentials remain outside the repository.
